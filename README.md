@@ -1,1 +1,1 @@
-# dns_generator
+# 53names
