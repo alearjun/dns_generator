@@ -15,25 +15,25 @@ const configuration = new Configuration({
   apiKey: process.env.MY_APP_OPENAI_API_KEY,
 });
 
-async function generateDomainNames(keywords) {
-  const prompt = `Act as an award winning consultant for naming companies. Based on the keywords, "${keywords}" generate 20 creative names for a company using the keywords .  Think beyond simply combining parts of the keywords and consider wordplay, puns, or other creative ideas to make the names stand out. Your job is to return a list of domain names for the company based on the names you come up with. Use a variety of top-level domains like .com, .io, .net, .org, etc. Your response should include only a list of the domains and nothing else except for the list.`;
+async function generateDomainNames(keywords, tlds) {
+  const prompt = `Act as an award winning consultant for naming companies. Based on the keywords, "${keywords}" generate 20 creative names for a company using the keywords.  Think beyond simply combining parts of the keywords and consider wordplay, puns, or other creative ideas to make the names stand out. Your job is to return a list of domain names for the company based on the names you come up with. Use the following top-level domains: ${tlds.join(', ')}. Your response should only be a list of domain names and nothing else.`;
+
   const openai = new OpenAIApi(configuration);
-  const completion = await openai.createCompletion({
-    model: 'text-davinci-003',
-    prompt: prompt,
+  const completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {role: "user", content: prompt}
+    ],
     max_tokens: 1000,
-    n: 1,
-    stop: null,
-    temperature: 1,
   });
 
-  const domainNames = completion.data.choices[0].text
+  const domainNames = completion.data.choices[0].message.content
     .trim()
     .toLowerCase()
     .split('\n')
     .map((name) => name.replace(/^\d+\. /, "")); // remove numbering
 
-  console.log(domainNames); // Log the response object to the console
+  console.log(domainNames);
 
   return domainNames;
 }
@@ -69,13 +69,15 @@ export default async function handler(req, res) {
   }
 
   const keywords = req.query.keywords;
+  console.log("Raw tlds query parameter:", req.query.tlds);
+  const tlds = req.query.tlds ? req.query.tlds.split(',') : [];
   if (!keywords) {
     res.status(400).send('Bad Request: Missing keywords.');
     return;
   }
 
   try {
-    const domainNames = await generateDomainNames(keywords);
+    const domainNames = await generateDomainNames(keywords, tlds);
     const availabilityPromises = domainNames.map(checkDomainAvailability);
     const availability = await Promise.all(availabilityPromises);
 
@@ -88,5 +90,5 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
+    }
   }
-}

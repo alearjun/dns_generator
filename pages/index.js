@@ -4,14 +4,20 @@ import styles from './spinner.module.css';
 const Home = () => {
   const [keywords, setKeywords] = useState('');
   const [domains, setDomains] = useState([]);
-  const [loading, setLoading] = useState(false); // Add this line to create the loading state
+  const [loading, setLoading] = useState(false);
+  const [tlds, setTlds] = useState({ com: true, net: true, org: true, io: false });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    const selectedTlds = Object.entries(tlds)
+      .filter(([key, value]) => value)
+      .map(([key]) => key)
+      .join(',');
+
     try {
-      const response = await fetch(`/api/generate-domains?keywords=${keywords}`);
+      const response = await fetch(`/api/generate-domains?keywords=${keywords}&tlds=${selectedTlds}`);
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Error response from API:', errorText);
@@ -30,6 +36,10 @@ const Home = () => {
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    setTlds({ ...tlds, [e.target.name]: e.target.checked });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-1/2">
@@ -46,22 +56,35 @@ const Home = () => {
               className="border-2 border-gray-300 p-2 rounded-md w-2/3 focus:border-blue-300"
             />
           </div>
+          <div className="flex flex-wrap">
+            {['com', 'net', 'org', 'io'].map((tld) => (
+              <label key={tld} className="flex items-center mr-4">
+                <input
+                  type="checkbox"
+                  name={tld}
+                  checked={tlds[tld]}
+                  onChange={handleCheckboxChange}
+                  className="mr-1"
+                />
+                .{tld}
+              </label>
+            ))}
+          </div>
           <button
-  type="submit"
-  className="bg-blue-600 text-white font-bold py-2 px-4 rounded-md w-full hover:bg-blue-700 relative h-12"
-  disabled={loading}
->
-  {loading ? (
-    <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-      <div className={styles.spinner}></div>
-    </div>
-  ) : (
-    <div className="flex items-center justify-center h-full">
-      Generate Domain Names
-    </div>
-  )}
-</button>
-
+            type="submit"
+            className="bg-blue-600 text-white font-bold py-2 px-4 rounded-md w-full hover:bg-blue-700 relative h-12"
+            disabled={loading}
+          >
+            {loading ? (
+              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className={styles.spinner}></div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                Generate Domain Names
+              </div>
+            )}
+          </button>
         </form>
         {/* Display the table of available domains. */}
         <table className="w-full mt-8" id="domain-table">
