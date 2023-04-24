@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './spinner.module.css';
-import tldsList from './tlds';
+import tldsList from '../data/tlds';
 
 
 const Home = () => {
