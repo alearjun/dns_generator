@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import styles from './spinner.module.css';
+import tldsList from './tlds';
+
 
 const Home = () => {
   const [keywords, setKeywords] = useState('');
   const [domains, setDomains] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [tlds, setTlds] = useState({ com: true, net: true, org: true, io: false });
+  const [tlds, setTlds] = useState(() => tldsList.reduce((acc, tld) => ({ ...acc, [tld]: false }), { '.com': true }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,9 +43,24 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-purple-400 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-1/2">
         <h1 className="text-3xl font-bold mb-6 text-center">53Names Generator</h1>
+        <p className="text-left text-gray-700 mb-4">
+        53Names is a domain name generator designed to help you find creative and available domain names for your next project or business. Simply enter your desired keywords and select your preferred top-level domains (TLDs) from the list. Our generator will provide you with a list of unique domain name ideas, making it easier for you to find the perfect domain name.
+        </p>
+        <p className="text-left mt-4 mb-6">
+          Have feedback or feature requests? Let us know{" "}
+          <a
+            href="https://53names.kampsite.co/"
+            target="_blank"
+            rel="noreferrer"
+            className="underline font-bold"
+          >
+            here
+          </a>
+          .
+        </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex justify-between items-center">
             <label htmlFor="keywords" className="font-semibold">Keywords:</label>
@@ -57,7 +74,7 @@ const Home = () => {
             />
           </div>
           <div className="flex flex-wrap">
-            {['com', 'net', 'org', 'io'].map((tld) => (
+            {tldsList.map((tld) => (
               <label key={tld} className="flex items-center mr-4">
                 <input
                   type="checkbox"
@@ -66,7 +83,7 @@ const Home = () => {
                   onChange={handleCheckboxChange}
                   className="mr-1"
                 />
-                .{tld}
+                {tld}
               </label>
             ))}
           </div>
@@ -103,7 +120,11 @@ const Home = () => {
             ))}
           </tbody>
         </table>
+      
       </div>
+      <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-gray-600">
+        (c) 2023
+      </p>
     </div>
   );
 };
