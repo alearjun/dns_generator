@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import styles from './spinner.module.css';
 import tldsList from '../data/tlds';
+import { PostHog } from 'posthog-node'
 
+const client = new PostHog(
+    'phc_CrLLUqwMEE29Ifz1h3eO7Ii46JHtOjKkiHgwzLE12lS',
+    { host: 'https://app.posthog.com' }
+)
 
 const Home = () => {
   const [keywords, setKeywords] = useState('');
