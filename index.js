@@ -49,6 +49,18 @@ const Home = () => {
         <p className="text-left text-gray-700 mb-4">
         53Names is a domain name generator designed to help you find creative and available domain names for your next project or business. Simply enter your desired keywords and select your preferred top-level domains (TLDs) from the list. Our generator will provide you with a list of unique domain name ideas, making it easier for you to find the perfect domain name.
         </p>
+        <p className="text-left mt-4 mb-6">
+          Have feedback or feature requests? Let us know{" "}
+          <a
+            href="https://53names.kampsite.co/"
+            target="_blank"
+            rel="noreferrer"
+            className="underline font-bold"
+          >
+            here
+          </a>
+          .
+        </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex justify-between items-center">
             <label htmlFor="keywords" className="font-semibold">Keywords:</label>
