@@ -54,8 +54,9 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-300 via-purple-300 to-purple-400 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-1/2">
+    <div className="h-auto bg-gradient-to-br from-blue-300 via-purple-300 to-purple-400 flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center h-full">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-1/2">
         <h1 className="text-3xl font-bold mb-6 text-center">53Names Generator</h1>
         <p className="text-left text-gray-700 mb-4">
         53Names is a domain name generator designed to help you find creative and available domain names for your next project or business. Simply enter your desired keywords and select your preferred top-level domains (TLDs) from the list. Our generator will provide you with a list of unique domain name ideas, making it easier for you to find the perfect domain name.
@@ -126,7 +127,9 @@ const Home = () => {
             ))}
           </tbody>
         </table>
-       <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-gray-600">
+        
+      </div>
+      <p className="mt-4 mb-4 text-sm text-gray-600">
         (c) 2023
       </p>
       </div>
