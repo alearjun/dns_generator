@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from './spinner.module.css';
 import tldsList from '../data/tlds';
 import { PostHog } from 'posthog-node'
+import SearchableDropdown from '../components/SearchableDropdown';
+
 
 const client = new PostHog(
     'phc_CrLLUqwMEE29Ifz1h3eO7Ii46JHtOjKkiHgwzLE12lS',
@@ -43,8 +45,12 @@ const Home = () => {
     }
   };
 
-  const handleCheckboxChange = (e) => {
-    setTlds({ ...tlds, [e.target.name]: e.target.checked });
+  const handleCheckboxChange = (newTlds) => {
+    const updatedTlds = tldsList.reduce(
+      (acc, tld) => ({ ...acc, [tld]: newTlds.includes(tld) }),
+      {}
+    );
+    setTlds(updatedTlds);
   };
 
   return (
@@ -78,19 +84,14 @@ const Home = () => {
               className="border-2 border-gray-300 p-2 rounded-md w-2/3 focus:border-blue-300"
             />
           </div>
-          <div className="flex flex-wrap">
-            {tldsList.map((tld) => (
-              <label key={tld} className="flex items-center mr-4">
-                <input
-                  type="checkbox"
-                  name={tld}
-                  checked={tlds[tld]}
-                  onChange={handleCheckboxChange}
-                  className="mr-1"
-                />
-                {tld}
-              </label>
-            ))}
+          <div className="flex justify-between items-center">
+            <label htmlFor="keywords" className="font-semibold">Select TLDs:</label>
+            <div className='w-2/3'>
+            <SearchableDropdown
+              tlds={tldsList}
+              onCheckboxChange={handleCheckboxChange}
+            />
+            </div>
           </div>
           <button
             type="submit"
