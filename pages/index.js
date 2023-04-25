@@ -126,11 +126,10 @@ const Home = () => {
             ))}
           </tbody>
         </table>
-      
-      </div>
-      <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-gray-600">
+       <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-gray-600">
         (c) 2023
       </p>
+      </div>
     </div>
   );
 };
